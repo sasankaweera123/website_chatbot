@@ -94,8 +94,7 @@ def create_dataset(all_words, tags, data_points):
     x_train = np.array(x_train)
     y_train = np.array(y_train, dtype=np.int64)
 
-    dataset = ChatDataset(x_train, y_train)
-    return dataset
+    return ChatDataset(x_train, y_train)
 
 
 def train_model():
@@ -143,10 +142,9 @@ def train_model():
         "tags": tags
     }
 
-    file_name = "data.pth"
-    torch.save(data, file_name)
+    torch.save(data, "data.pth")
 
-    print(f'Training complete. Model saved to {file_name}')
+    print(f'Training complete. Model saved to file: data.pth')
 
 
 if __name__ == '__main__':
