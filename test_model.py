@@ -11,11 +11,12 @@ import torch
 from model import NeuralNet
 
 
-def test_NeuralNet_forward():
+def test_neural_net_forward():
     """
     Test case for the forward method of the NeuralNet model.
 
-    The test verifies the shape of the output tensor when passing input data through the neural network.
+    The test verifies the shape of the output tensor when passing
+    input data through the neural network.
 
     Raises:
         AssertionError: If the test assertion fails.

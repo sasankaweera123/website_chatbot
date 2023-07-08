@@ -3,7 +3,8 @@ This module contains a Flask application for a chatbot API.
 
 The application provides two routes:
 - GET '/' returns the base HTML template.
-- POST '/predict' expects a JSON payload with a 'message' field and returns a response from the chatbot.
+- POST '/predict' expects a JSON payload with a 'message' field and
+  returns a response from the chatbot.
 
 Usage:
     - Run this module to start the Flask application.
