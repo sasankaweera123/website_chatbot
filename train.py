@@ -29,11 +29,12 @@ class ChatDataset(Dataset):
     """
 
     def __init__(self, x_data, y_data):
-        self.data = list(zip(x_data, y_data))
-        self.n_samples = len(self.data)
+        self.n_samples = len(x_data)
+        self.x_data = x_data
+        self.y_data = y_data
 
     def __getitem__(self, idx):
-        return self.data[idx]
+        return self.x_data[idx], torch.tensor(self.y_data[idx], dtype=torch.long)
 
     def __len__(self):
         return self.n_samples
@@ -54,14 +55,16 @@ def preprocess_data(intents):
     data_points = []
 
     for intent in intents['intents']:
-        tags.append(intent['tag'])
+        tag = intent['tag']
+        tags.append(tag)
         for pattern in intent['patterns']:
             words = tokenize(pattern)
             all_words.extend(words)
-            data_points.append((words, intent['tag']))
+            data_points.append((words, tag))
 
     ignore_words = ['?', '.', '!']
-    all_words = sorted(set(stem(w) for w in all_words if w not in ignore_words))
+    all_words = [stem(w) for w in all_words if w not in ignore_words]
+    all_words = sorted(set(all_words))
     tags = sorted(set(tags))
 
     return all_words, tags, data_points
@@ -85,9 +88,13 @@ def create_dataset(all_words, tags, data_points):
     for (pattern_sentence, tag) in data_points:
         bag = bag_of_words(pattern_sentence, all_words)
         x_train.append(bag)
-        y_train.append(tags.index(tag))
+        label = tags.index(tag)
+        y_train.append(label)
 
-    return ChatDataset(np.array(x_train), np.array(y_train))
+    x_train = np.array(x_train)
+    y_train = np.array(y_train, dtype=np.int64)
+
+    return ChatDataset(x_train, y_train)
 
 
 def train_model():
@@ -107,7 +114,9 @@ def train_model():
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
-    for epoch in range(1000):
+    num_epochs = 1000
+
+    for epoch in range(num_epochs):
         running_loss = 0.0
 
         for words, labels in train_loader:
@@ -122,9 +131,18 @@ def train_model():
             running_loss += loss.item()
 
         if (epoch + 1) % 100 == 0:
-            print(f'Epoch [{epoch + 1}/{1000}], Loss: {running_loss / len(train_loader):.4f}')
+            print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {running_loss / len(train_loader):.4f}')
 
-    torch.save(model.state_dict(), "data.pth")
+    data = {
+        "model_state": model.state_dict(),
+        "input_size": len(all_words),
+        "output_size": len(tags),
+        "hidden_size": 8,
+        "all_words": all_words,
+        "tags": tags
+    }
+
+    torch.save(data, "data.pth")
 
     print('Training complete. Model saved to file: data.pth')
 
