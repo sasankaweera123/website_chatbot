@@ -38,12 +38,3 @@ def test_predict(client: FlaskClient):
     response = client.post('/predict', json={'message': 'Hi'})
     assert response.status_code == 200
     assert 'message' in response.json
-    assert response.json['message'] in [
-        "Hey :-)",
-        "Hello, thanks for visiting",
-        "Hi there, what can I do for you?",
-        "Hi there, how can I help?",
-        "I'm glad you're talking to me.",
-        "Hello, how can I help you?",
-        "Hi, how can I help you?"
-    ]

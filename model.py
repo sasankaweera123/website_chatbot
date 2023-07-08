@@ -32,9 +32,9 @@ class NeuralNet(nn.Module):
             num_classes (int): Number of classes in the output layer.
         """
         super().__init__()
-        self.l1 = nn.Linear(input_size, hidden_size)
-        self.l2 = nn.Linear(hidden_size, hidden_size)
-        self.l3 = nn.Linear(hidden_size, num_classes)
+        self.line_1 = nn.Linear(input_size, hidden_size)
+        self.line_2 = nn.Linear(hidden_size, hidden_size)
+        self.line_3 = nn.Linear(hidden_size, num_classes)
         self.relu = nn.ReLU()
 
     def forward(self, input_tensor):
@@ -47,10 +47,24 @@ class NeuralNet(nn.Module):
         Returns:
             torch.Tensor: Output tensor from the neural network.
         """
-        out = self.l1(input_tensor)
+        out = self.line_1(input_tensor)
         out = self.relu(out)
-        out = self.l2(out)
+        out = self.line_2(out)
         out = self.relu(out)
-        out = self.l3(out)
+        out = self.line_3(out)
         # no activation and no softmax at the end
         return out
+
+    def predict(self, input_tensor):
+        """
+        Perform the prediction using the neural network.
+
+        Args:
+            input_tensor (torch.Tensor): Input tensor to the neural network.
+
+        Returns:
+            torch.Tensor: Predicted output tensor from the neural network.
+        """
+        output = self.forward(input_tensor)
+        # Apply softmax or other appropriate post-processing
+        return output

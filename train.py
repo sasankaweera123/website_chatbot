@@ -100,7 +100,7 @@ def train_model():
     """
     Trains the chatbot model and saves the trained model to a file.
     """
-    with open('intents.json') as file:
+    with open('intents.json', encoding='utf-8') as file:
         intents = json.load(file)
 
     all_words, tags, data_points = preprocess_data(intents)
