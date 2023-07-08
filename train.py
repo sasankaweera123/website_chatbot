@@ -115,10 +115,12 @@ def train_model():
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
-    for epoch in range(1000):
-        loss = None  # Initialize loss variable with None
+    num_epochs = 1000
 
-        for (words, labels) in train_loader:
+    for epoch in range(num_epochs):
+        running_loss = 0.0
+
+        for words, labels in train_loader:
             words = words.to(device)
             labels = labels.to(device)
             optimizer.zero_grad()
@@ -127,8 +129,10 @@ def train_model():
             loss.backward()
             optimizer.step()
 
+            running_loss += loss.item()
+
         if (epoch + 1) % 100 == 0:
-            print(f'Epoch [{epoch + 1}/1000], Loss: {loss.item():.4f}')
+            print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {running_loss / len(train_loader):.4f}')
 
     data = {
         "model_state": model.state_dict(),
