@@ -1,4 +1,3 @@
-import pytest
 import numpy as np
 from nltk_utils import tokenize, stem, bag_of_words
 
