@@ -18,6 +18,7 @@ from torch.utils.data import Dataset, DataLoader
 from nltk_utils import tokenize, stem, bag_of_words
 from model import NeuralNet
 
+
 class ChatDataset(Dataset):
     """
     Custom PyTorch dataset class for the chatbot training data.
@@ -28,7 +29,7 @@ class ChatDataset(Dataset):
     """
 
     def __init__(self, x_data, y_data):
-        self.data = [(x, y) for x, y in zip(x_data, y_data)]
+        self.data = list(zip(x_data, y_data))
         self.n_samples = len(self.data)
 
     def __getitem__(self, idx):
@@ -36,6 +37,7 @@ class ChatDataset(Dataset):
 
     def __len__(self):
         return self.n_samples
+
 
 def preprocess_data(intents):
     """
@@ -64,6 +66,7 @@ def preprocess_data(intents):
 
     return all_words, tags, data_points
 
+
 def create_dataset(all_words, tags, data_points):
     """
     Creates a PyTorch dataset from the preprocessed data.
@@ -85,6 +88,7 @@ def create_dataset(all_words, tags, data_points):
         y_train.append(tags.index(tag))
 
     return ChatDataset(np.array(x_train), np.array(y_train))
+
 
 def train_model():
     """
@@ -125,6 +129,7 @@ def train_model():
     torch.save(model.state_dict(), "data.pth")
 
     print('Training complete. Model saved to file: data.pth')
+
 
 if __name__ == '__main__':
     train_model()
