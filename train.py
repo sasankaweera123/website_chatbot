@@ -1,3 +1,13 @@
+"""
+This module contains code for training a chatbot model using a neural network.
+
+The script reads training data from a JSON file, preprocesses the data, creates a PyTorch dataset and data loader,
+defines the neural network model, and trains the model using cross-entropy loss and the Adam optimizer.
+
+Usage:
+    - Run the script to train the chatbot model and save the trained model to a file.
+"""
+
 import json
 import numpy as np
 import torch
@@ -8,6 +18,14 @@ from model import NeuralNet
 
 
 class ChatDataset(Dataset):
+    """
+    Custom PyTorch dataset class for the chatbot training data.
+
+    Args:
+        x_data (np.ndarray): The input data.
+        y_data (np.ndarray): The target labels.
+    """
+
     def __init__(self, x_data, y_data):
         self.n_samples = len(x_data)
         self.x_data = x_data
@@ -20,13 +38,19 @@ class ChatDataset(Dataset):
         return self.n_samples
 
 
-def train_model():
-    with open('intents.json') as f:
-        intents = json.load(f)
+def preprocess_data(intents):
+    """
+    Preprocesses the training data.
 
+    Args:
+        intents (dict): The JSON data containing training intents.
+
+    Returns:
+        tuple: A tuple containing the preprocessed all_words, tags, and data_points.
+    """
     all_words = []
     tags = []
-    xy = []
+    data_points = []
 
     for intent in intents['intents']:
         tag = intent['tag']
@@ -34,17 +58,32 @@ def train_model():
         for pattern in intent['patterns']:
             words = tokenize(pattern)
             all_words.extend(words)
-            xy.append((words, tag))
+            data_points.append((words, tag))
 
     ignore_words = ['?', '.', '!']
     all_words = [stem(w) for w in all_words if w not in ignore_words]
     all_words = sorted(set(all_words))
     tags = sorted(set(tags))
 
+    return all_words, tags, data_points
+
+
+def create_dataset(all_words, tags, data_points):
+    """
+    Creates a PyTorch dataset from the preprocessed data.
+
+    Args:
+        all_words (list): The preprocessed list of all words.
+        tags (list): The preprocessed list of tags.
+        data_points (list): The preprocessed list of data points.
+
+    Returns:
+        ChatDataset: The PyTorch dataset.
+    """
     x_train = []
     y_train = []
 
-    for (pattern_sentence, tag) in xy:
+    for (pattern_sentence, tag) in data_points:
         bag = bag_of_words(pattern_sentence, all_words)
         x_train.append(bag)
         label = tags.index(tag)
@@ -54,6 +93,19 @@ def train_model():
     y_train = np.array(y_train, dtype=np.int64)
 
     dataset = ChatDataset(x_train, y_train)
+    return dataset
+
+
+def train_model():
+    """
+    Trains the chatbot model and saves the trained model to a file.
+    """
+    with open('intents.json') as file:
+        intents = json.load(file)
+
+    all_words, tags, data_points = preprocess_data(intents)
+    dataset = create_dataset(all_words, tags, data_points)
+
     train_loader = DataLoader(dataset=dataset, batch_size=8, shuffle=True, num_workers=0)
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -62,6 +114,8 @@ def train_model():
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
     for epoch in range(1000):
+        loss = None  # Initialize loss variable with None
+
         for (words, labels) in train_loader:
             words = words.to(device)
             labels = labels.to(device)
@@ -83,10 +137,10 @@ def train_model():
         "tags": tags
     }
 
-    FILE = "data.pth"
-    torch.save(data, FILE)
+    file_name = "data.pth"
+    torch.save(data, file_name)
 
-    print(f'training complete. file saved to {FILE}')
+    print(f'Training complete. Model saved to {file_name}')
 
 
 if __name__ == '__main__':

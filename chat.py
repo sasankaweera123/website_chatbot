@@ -1,3 +1,11 @@
+"""
+This module implements a chatbot using PyTorch for natural language processing.
+
+The chatbot utilizes a pre-trained neural network model to generate responses based on user input.
+
+Usage:
+    - Run this module to start the chatbot conversation.
+"""
 import random
 import json
 import torch
@@ -6,7 +14,7 @@ from nltk_utils import bag_of_words, tokenize
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-with open('intents.json', 'r') as f:
+with open('intents.json', 'r', encoding='utf-8') as f:
     intents = json.load(f)
 
 FILE = "data.pth"
@@ -23,16 +31,25 @@ model = NeuralNet(input_size, hidden_size, output_size).to(device)
 model.load_state_dict(model_state)
 model.eval()
 
-bot_name = "Sasa"
+BOT_NAME = "Sasa"
 
 
 def get_response(user_sentence):
-    user_sentence = tokenize(user_sentence)
-    x = bag_of_words(user_sentence, all_words)
-    x = x.reshape(1, x.shape[0])
-    x = torch.from_numpy(x)
+    """
+      Generate a response from the chatbot based on user input.
 
-    output = model(x)
+      Args:
+          user_sentence (str): User input sentence.
+
+      Returns:
+          str: Generated response from the chatbot.
+    """
+    user_sentence = tokenize(user_sentence)
+    bag_of_words_vector = bag_of_words(user_sentence, all_words)
+    bag_of_words_vector = bag_of_words_vector.reshape(1, bag_of_words_vector.shape[0])
+    bag_of_words_vector = torch.from_numpy(bag_of_words_vector)
+
+    output = model(bag_of_words_vector)
     _, predicted = torch.max(output, dim=1)
 
     tag = tags[predicted.item()]
@@ -45,8 +62,7 @@ def get_response(user_sentence):
             if tag == intent["tag"]:
                 return random.choice(intent['responses'])
 
-    else:
-        return "I do not understand..."
+    return "I do not understand..."
 
 
 if __name__ == '__main__':
