@@ -18,6 +18,15 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pylint
-    - name: Analysing the code with pylint
+    - name: Analyzing the code with pylint
+      id: pylint
       run: |
         pylint --disable=import-error $(git ls-files '*.py')
+        echo "::set-output name=rating::$(pylint_score)"
+      env:
+        pylint_score: ${{ steps.pylint.outputs.rating }}
+    - name: Complete the process if rating is 9 or higher
+      if: steps.pylint.outputs.rating >= 9
+      run: |
+        echo "Code rating is 9 or higher. Completing the process."
+        # Add your additional steps or actions here to complete the process
