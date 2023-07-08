@@ -1,7 +1,9 @@
 """
-This module contains unit tests for the `preprocess_data` and `create_dataset` functions in the `train` module.
+This module contains unit tests for the `preprocess_data` and `create_dataset`
+functions in the `train` module.
 
-The tests verify that the functions produce the expected results based on the provided `intents` fixture.
+The tests verify that the functions produce the expected results based on the
+provided `intents` fixture.
 """
 
 import pytest
@@ -12,6 +14,12 @@ from train import preprocess_data, create_dataset
 
 @pytest.fixture
 def intents():
+    """
+    Fixture to provide the intents data structure.
+
+    :return:
+        The intents data structure.
+    """
     return {
         "intents": [
             {

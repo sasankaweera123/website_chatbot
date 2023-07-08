@@ -1,7 +1,8 @@
 """
 This module contains unit tests for the Flask application.
 
-The tests use the pytest testing framework and test the '/predict' endpoint of the application.
+The tests use the pytest testing framework and test the '/predict'
+endpoint of the application.
 
 Usage:
     - Run the tests using a test runner or the pytest command.
