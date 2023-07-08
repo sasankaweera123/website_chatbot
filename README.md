@@ -29,7 +29,7 @@ git clone https://github.com/sasankaweera123/website_chatbot.git
 
 2. Install the required dependencies:
 
-```pip install {package}```
+```pip install -r requirements.txt```
 
 3. Train the chatbot model:
     - Update the `intents.json` file with your own intents, patterns, and responses.
