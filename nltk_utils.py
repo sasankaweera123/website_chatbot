@@ -1,11 +1,13 @@
 """
 This module provides utility functions for natural language processing using the nltk library.
 
-The module includes functions for tokenizing sentences, stemming words, and creating a bag of words representation.
+The module includes functions for tokenizing sentences, stemming words,
+and creating a bag of words representation.
 
 Usage:
     - Import the module or specific functions as needed.
-    - Call the functions with the appropriate arguments to perform the desired natural language processing tasks.
+    - Call the functions with the appropriate arguments to perform the
+      desired natural language processing tasks.
 """
 
 import nltk

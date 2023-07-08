@@ -1,8 +1,10 @@
 """
 This module contains code for training a chatbot model using a neural network.
 
-The script reads training data from a JSON file, preprocesses the data, creates a PyTorch dataset and data loader,
-defines the neural network model, and trains the model using cross-entropy loss and the Adam optimizer.
+The script reads training data from a JSON file, preprocesses the data,
+creates a PyTorch dataset and data loader,
+defines the neural network model, and trains the model using cross-entropy
+loss and the Adam optimizer.
 
 Usage:
     - Run the script to train the chatbot model and save the trained model to a file.
@@ -11,7 +13,7 @@ Usage:
 import json
 import numpy as np
 import torch
-import torch.nn as nn
+from torch import nn
 from torch.utils.data import Dataset, DataLoader
 from nltk_utils import tokenize, stem, bag_of_words
 from model import NeuralNet

@@ -43,7 +43,8 @@ def test_bag_of_words():
     """
     Test case for the bag_of_words function.
 
-    The test checks if the bag_of_words function correctly creates a bag of words representation for a tokenized sentence.
+    The test checks if the bag_of_words function correctly creates
+    a bag of words representation for a tokenized sentence.
 
     Raises:
         AssertionError: If the test assertion fails.

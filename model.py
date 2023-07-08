@@ -5,7 +5,8 @@ The model is implemented as a class named NeuralNet, which inherits from the nn.
 The NeuralNet class represents a feedforward neural network with linear layers and ReLU activation.
 
 Usage:
-    Instantiate an instance of the NeuralNet class with the desired input size, hidden size, and number of classes.
+    Instantiate an instance of the NeuralNet class with the desired
+    input size, hidden size, and number of classes.
     Call the forward() method on the instance to perform the forward pass of the neural network.
 
 Example:
